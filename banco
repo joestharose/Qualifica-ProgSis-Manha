@@ -1,0 +1,35 @@
+import sqlite3
+
+class GerenciadorBanco:
+    def __init__(self, db_name="qualifica.db"):
+        self.conn = sqlite3.connect(db_name)
+        self.cursor = self.conn.cursor()
+        self.criar_tabela_usuarios()
+
+    def criar_tabela_usuarios(self):
+        # A tabela usuarios terá uma coluna 'tipo' (aluno, professor, coordenador)
+        self.cursor.execute("""
+            CREATE TABLE IF NOT EXISTS usuarios (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                nome TEXT NOT NULL UNIQUE,
+                senha TEXT NOT NULL,
+                tipo TEXT NOT NULL
+            )
+        """)
+        self.conn.commit()
+
+    def fechar_conexao(self):
+        self.conn.close()
+
+    def inserir_usuario(self, nome, senha, tipo):
+        try:
+            self.cursor.execute("INSERT INTO usuarios (nome, senha, tipo) VALUES (?, ?, ?)", (nome, senha, tipo))
+            self.conn.commit()
+            print(f"Usuário {nome} ({tipo}) cadastrado com sucesso!")
+        except sqlite3.IntegrityError:
+            print(f"Erro: O nome de usuário '{nome}' já existe.")
+
+    def verificar_login(self, nome, senha, tipo):
+        self.cursor.execute("SELECT * FROM usuarios WHERE nome = ? AND senha = ? AND tipo = ?", (nome, senha, tipo))
+        usuario = self.cursor.fetchone()
+        return usuario
