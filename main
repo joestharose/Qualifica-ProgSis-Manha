@@ -1,4 +1,4 @@
-from banco import GerenciadorBanco
+from  import GerenciadorBanco
 
 class MenuPrincipal:
     def __init__(self):

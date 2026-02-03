@@ -6,6 +6,7 @@ class GerenciadorBanco:
         self.cursor = self.conn.cursor()
         self.criar_tabela_usuarios()
 
+
     def criar_tabela_usuarios(self):
         # A tabela usuarios terá uma coluna 'tipo' (aluno, professor, coordenador)
         self.cursor.execute("""
