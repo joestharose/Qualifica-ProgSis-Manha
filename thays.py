@@ -1,5 +1,5 @@
 import sqlite3
-import sys
+
 
 # --- 1. Camada de Dados (Banco de Dados) ---
 
