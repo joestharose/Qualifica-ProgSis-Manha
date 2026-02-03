@@ -1,10 +1,56 @@
-#Fazer um programa para cadastrar usuários, 1 classe, (nome, endereço, telefone, cpf/cnpj, email), mostrar um visualizador com os objetos.
+from banco import GerenciadorBanco
 
-#No menu terá duas opções, cadastrar e visualizar
+class MenuPrincipal:
+    def __init__(self):
+        self.db = GerenciadorBanco()
 
-# main.py
-from usuarios import executar_menu
+    def exibir_menu(self):
+        while True:
+            print("\n--- Menu Principal Qualifica ---")
+            print("1. Login")
+            print("2. Cadastrar Novo Usuário")
+            print("3. Sair")
+            opcao = input("Escolha uma opção: ")
 
+            if opcao == '1':
+                self.login()
+            elif opcao == '2':
+                self.cadastrar_usuario()
+            elif opcao == '3':
+                self.db.fechar_conexao()
+                break
+            else:
+                print("Opção inválida. Tente novamente.")
 
+    def login(self):
+        nome = input("Nome de usuário: ")
+        senha = input("Senha: ")
+        tipo = input("Tipo (aluno/professor/coordenador): ").lower()
+        
+        # Validação básica de tipo de usuário, conforme especificado no projeto
+        if tipo not in ['aluno', 'professor', 'coordenador']:
+            print("Tipo de usuário inválido.")
+            return
+
+        usuario = self.db.verificar_login(nome, senha, tipo)
+        if usuario:
+            print(f"Login bem-sucedido! Bem-vindo, {nome} ({tipo}).")
+            # Aqui você chamaria o menu específico para o tipo de usuário (ex: menu_aluno())
+        else:
+            print("Nome de usuário, senha ou tipo incorretos.")
+
+    def cadastrar_usuario(self):
+        print("\n--- Cadastro de Novo Usuário ---")
+        nome = input("Digite o nome de usuário: ")
+        senha = input("Digite a senha: ")
+        tipo = input("Digite o tipo (aluno/professor/coordenador): ").lower()
+        
+        if tipo in ['aluno', 'professor', 'coordenador']:
+            self.db.inserir_usuario(nome, senha, tipo)
+        else:
+            print("Tipo de usuário inválido. Use 'aluno', 'professor' ou 'coordenador'.")
+
+# Para executar o programa:
 if __name__ == "__main__":
-    executar_menu()
+    menu = MenuPrincipal()
+    menu.exibir_menu()
